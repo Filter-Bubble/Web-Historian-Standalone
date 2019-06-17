@@ -1,0 +1,16 @@
+.DS_Store
+*.json
+*.db
+*.spec
+*.app
+*.dmg
+/dist
+/build
+Manifest.js
+Messages.js
+Categories.js
+LoadCategories.js
+HistoryItems.js
+VisitItems.js
+Log.json
+WebExtensionShim.js

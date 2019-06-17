@@ -1,0 +1,9 @@
+[submodule "Web-Historian-Community"]
+	path = Web-Historian-Community
+	url = https://github.com/WebHistorian/community.git
+[submodule "Web-Extension-Shim"]
+	path = Web-Extension-Shim
+	url = https://github.com/Filter-Bubble/Web-Extension-Shim.git
+[submodule "Web-Historian-Habits"]
+	path = Web-Historian-Habits
+	url = https://github.com/WebHistorian/habits.git
