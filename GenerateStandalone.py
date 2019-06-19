@@ -27,7 +27,7 @@ sqlHistoryItems = "\
 	GROUP BY history_items.id \
 	ORDER BY history_visits.visit_time;"
 sqlVisitItems = "\
-	SELECT history_visits.history_item, history_visits.id as visitId, CAST(1000 * history_visits.visit_time AS INT) + 978307200000, IFNULL(history_visits.redirect_source, 0), CASE WHEN history_visits.redirect_source IS NULL THEN \"typed\" ELSE \"link\" END \
+	SELECT history_visits.history_item, history_visits.id as visitId, CAST(1000 * history_visits.visit_time AS INT) + 978307200000, IFNULL(history_visits.redirect_source, 0), CASE WHEN history_visits.redirect_source IS NULL THEN \"typed\" ELSE \"link\" END, history_visits.origin as visitOrigin \
 	FROM history_visits \
 	ORDER BY history_visits.visit_time;"
 injectedHtml = "\
@@ -150,7 +150,7 @@ if continueBoolean:
 			historyOutputData.append({"id" : row[0], "url" : row[1], "title" : row[2], "lastVisitTime" : row[3], "visitCount" : row[4], "typedCount" : 1}) # replace "typedCount" with real data when it becomes available in Safari
 		visitOutputData = []
 		for row in cursor.execute(sqlVisitItems):
-			visitOutputData.append({"id" : row[0], "visitId" : row[1], "visitTime" : row[2], "referringVisitId" : row[3], "transition" : row[4]}) # replace "transition" with real data when it becomes available in Safari
+			visitOutputData.append({"id" : row[0], "visitId" : row[1], "visitTime" : row[2], "referringVisitId" : row[3], "transition" : row[4], "visitOrigin" : row[5]}) # replace "transition" with real data when it becomes available in Safari
 		connection.close()
 		logList.append({"Action" : "Extract History and Visit Items from  Safari database", "Success" : True})
 	except Exception as exception:
