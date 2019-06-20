@@ -19,6 +19,7 @@ Part of this project makes use of the [Web Historian](http://www.webhistorian.or
 
 - Run `pyinstaller GenerateStandalone.py --onefile --windowed --name="WebHistorian" --icon="icon-128.icns" --add-data="Web-Historian-xx/:Web-Historian/" --add-data="Web-Extension-Shim/WebExtensionShim.js:Web-Historian/" --add-data="FullDiskAccess.html:Web-Historian/" --add-data="FullDiskAccess.gif:Web-Historian/"`.
 - Substitute `Web-Historian-Community`, `Web-Historian-Education` or `Web-Historian-Habits` for `Web-Historian-xx`.
+- Run `Disk Utility` and choose `File` > `New Image` > `Image from Folder` (see [here](https://support.apple.com/en-gb/guide/disk-utility/dskutl11888/mac)). Then select the directory with the Web Historian app. This will generate a _.dmg_ file which allows the app to be distributed more easily.
 
 ### Additional commands
 
