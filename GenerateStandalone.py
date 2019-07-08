@@ -26,7 +26,7 @@ injectedHtml = "\
 	<script type=\"application/javascript\" src=\"VisitItems.js\"></script> \
 	<script type=\"application/javascript\" src=\"WebExtensionShim.js\"></script>"
 
-def generateStandalone(quitBrowserCommand, databaseInputFile, sqlHistoryItems, sqlVisitItems):
+def generateStandalone(databaseInputFile, sqlHistoryItems, sqlVisitItems):
 
 	continueBoolean = True
 
@@ -118,15 +118,8 @@ def generateStandalone(quitBrowserCommand, databaseInputFile, sqlHistoryItems, s
 
 	if continueBoolean:
 		try:
-			os.system(quitBrowserCommand)
-			logList.append({"Action" : "Quit browser", "Success" : True})
-		except Exception as exception:
-			logList.append({"Action" : "Quit browser", "Success" : False, "Error" : str(exception)})
-			continueBoolean = False
-
-	if continueBoolean:
-		try:
-			connection = sqlite3.connect(databaseInputFile)
+			shutil.copyfile(databaseInputFile, databaseInputFile + ".copy.db") # to avoid the DB being locked.
+			connection = sqlite3.connect(databaseInputFile + ".copy.db")
 			cursor = connection.cursor()
 			logList.append({"Action" : "Open connection to Safari database", "Success" : True})
 		except Exception as exception:
@@ -136,11 +129,6 @@ def generateStandalone(quitBrowserCommand, databaseInputFile, sqlHistoryItems, s
 				logList.append({"Action" : "Open Full Disk Access page in new tab in browser", "Success" : True})
 			except Exception as exception:
 				logList.append({"Action" : "Open Full Disk Access page in new tab in browser", "Success" : False, "Error" : str(exception)})
-			try:
-				webbrowser.open(fullDiskAccessSettings)
-				logList.append({"Action" : "Open Full Disk Access settings", "Success" : True})
-			except Exception as exception:
-				logList.append({"Action" : "Open Full Disk Access settings", "Success" : False, "Error" : str(exception)})
 			continueBoolean = False
 
 	if continueBoolean:

@@ -1,6 +1,5 @@
 import os, sys, GenerateStandalone
 
-quitBrowserCommand = "killall -9 'Safari'"
 databaseInputFile = os.path.join(os.path.expanduser("~"), "Library", "Safari", "History.db")
 sqlHistoryItems = "\
 	SELECT \
@@ -28,4 +27,4 @@ sqlVisitItems = "\
 	FROM history_visits \
 	ORDER BY history_visits.visit_time DESC;" # replace "transition" with real data if/when it becomes available in Safari
 
-GenerateStandalone.generateStandalone(quitBrowserCommand, databaseInputFile, sqlHistoryItems, sqlVisitItems)
+GenerateStandalone.generateStandalone(databaseInputFile, sqlHistoryItems, sqlVisitItems)

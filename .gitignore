@@ -1,8 +1,9 @@
+/.ipynb_checkpoints
+/__pycache__
+/dist
+/build
 .DS_Store
 *.json
 *.db
 *.app
 *.dmg
-/dist
-/build
-/.ipynb_checkpoints

@@ -1,7 +1,6 @@
 import os, sys, GenerateStandalone
 
-quitBrowserCommand = "taskkill /im chrome.exe /f"
-databaseInputFile = os.path.join(os.path.expanduser("~"), "AppData", "Local", "Google", "Chrome", "User Data", "Default", "History")
+databaseInputFile = os.path.join(os.path.expandvars("%LOCALAPPDATA%"), "Google", "Chrome", "User Data", "Default", "History")
 sqlHistoryItems = "\
 	SELECT \
 		urls.id, \
@@ -37,4 +36,4 @@ sqlVisitItems = "\
 	LEFT JOIN visit_source on visits.id = visit_source.id \
 	ORDER BY visits.visit_time DESC;"
 
-GenerateStandalone.generateStandalone(quitBrowserCommand, databaseInputFile, sqlHistoryItems, sqlVisitItems)
+GenerateStandalone.generateStandalone(databaseInputFile, sqlHistoryItems, sqlVisitItems)
