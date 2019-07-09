@@ -1,4 +1,4 @@
-import os, sys, GenerateStandalone
+import os, GenerateStandalone
 
 databaseInputFile = os.path.join(os.path.expanduser("~"), "Library", "Safari", "History.db")
 sqlHistoryItems = "\
@@ -12,7 +12,7 @@ sqlHistoryItems = "\
 	FROM history_visits \
 	INNER JOIN history_items ON history_items.id = history_visits.history_item \
 	GROUP BY history_items.id \
-	ORDER BY history_visits.visit_time DESC;" # replace "typedCount" with real data if/when it becomes available in Safari
+	ORDER BY lastVisitTime DESC;" # replace "typedCount" with real data if/when it becomes available in Safari
 sqlVisitItems = "\
 	SELECT \
 		history_visits.history_item AS id, \

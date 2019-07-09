@@ -118,8 +118,7 @@ def generateStandalone(databaseInputFile, sqlHistoryItems, sqlVisitItems):
 
 	if continueBoolean:
 		try:
-			shutil.copyfile(databaseInputFile, databaseInputFile + ".copy.db") # to avoid the DB being locked.
-			connection = sqlite3.connect(databaseInputFile + ".copy.db")
+			connection = sqlite3.connect(databaseInputFile)
 			cursor = connection.cursor()
 			logList.append({"Action" : "Open connection to Safari database", "Success" : True})
 		except Exception as exception:
@@ -143,6 +142,11 @@ def generateStandalone(databaseInputFile, sqlHistoryItems, sqlVisitItems):
 			logList.append({"Action" : "Extract History and Visit Items from  Safari database", "Success" : True})
 		except Exception as exception:
 			logList.append({"Action" : "Extract History and Visit Items from  Safari database", "Success" : False, "Error" : str(exception)})
+			try:
+				webbrowser.open_new_tab("file:" + fullDiskAccessPage)
+				logList.append({"Action" : "Open Full Disk Access page in new tab in browser", "Success" : True})
+			except Exception as exception:
+				logList.append({"Action" : "Open Full Disk Access page in new tab in browser", "Success" : False, "Error" : str(exception)})
 			connection.close()
 			continueBoolean = False
 
