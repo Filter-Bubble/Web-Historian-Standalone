@@ -1,4 +1,4 @@
-import os, sys, GenerateStandalone
+import os, GenerateStandalone
 
 databaseInputFile = os.path.join(os.path.expandvars("%LOCALAPPDATA%"), "Google", "Chrome", "User Data", "Default", "History")
 sqlHistoryItems = "\
