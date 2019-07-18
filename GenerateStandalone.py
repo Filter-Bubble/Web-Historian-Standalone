@@ -29,7 +29,7 @@ injectedHtml = "\
 	<script type=\"application/javascript\" src=\"VisitItems.js\"></script> \
 	<script type=\"application/javascript\" src=\"WebExtensionShim.js\"></script>"
 
-def generateStandalone(databaseInputFile, sqlHistoryItems, sqlVisitItems):
+def generateStandalone(databaseInputFile, sqlHistoryItems, sqlVisitItems, copyDatabaseInputFile):
 
 	continueBoolean = True
 
@@ -133,11 +133,16 @@ def generateStandalone(databaseInputFile, sqlHistoryItems, sqlVisitItems):
 
 	if continueBoolean:
 		try:
-			connection = sqlite3.connect(databaseInputFile)
+			if copyDatabaseInputFile: # to avoid the DB being locked.
+				databaseInputFileCopy = databaseInputFile + ".copy.db"
+				shutil.copyfile(databaseInputFile, databaseInputFileCopy)
+				connection = sqlite3.connect(databaseInputFileCopy)
+			else:
+				connection = sqlite3.connect(databaseInputFile)
 			cursor = connection.cursor()
-			logList.append({"Action" : "Open connection to Safari database", "Success" : True})
+			logList.append({"Action" : "Open connection to database", "Success" : True})
 		except Exception as exception:
-			logList.append({"Action" : "Open connection to Safari database", "Success" : False, "Error" : str(exception)})
+			logList.append({"Action" : "Open connection to browser database", "Success" : False, "Error" : str(exception)})
 			try:
 				webbrowser.open_new_tab("file:" + fullDiskAccessPage)
 				logList.append({"Action" : "Open Full Disk Access page in new tab in browser", "Success" : True})
@@ -154,9 +159,9 @@ def generateStandalone(databaseInputFile, sqlHistoryItems, sqlVisitItems):
 			for row in cursor.execute(sqlVisitItems):
 				visitOutputData.append({"id" : row[0], "visitId" : row[1], "visitTime" : row[2], "referringVisitId" : row[3], "transition" : row[4], "visitOrigin" : row[5]})
 			connection.close()
-			logList.append({"Action" : "Extract History and Visit Items from  Safari database", "Success" : True})
+			logList.append({"Action" : "Extract History and Visit Items from browser database", "Success" : True})
 		except Exception as exception:
-			logList.append({"Action" : "Extract History and Visit Items from  Safari database", "Success" : False, "Error" : str(exception)})
+			logList.append({"Action" : "Extract History and Visit Items from browser database", "Success" : False, "Error" : str(exception)})
 			try:
 				webbrowser.open_new_tab("file:" + fullDiskAccessPage)
 				logList.append({"Action" : "Open Full Disk Access page in new tab in browser", "Success" : True})
@@ -167,16 +172,16 @@ def generateStandalone(databaseInputFile, sqlHistoryItems, sqlVisitItems):
 
 	if continueBoolean:
 		if len(historyOutputData) > 0:
-			logList.append({"Action" : "Safari database contains History Items", "Success" : True})
+			logList.append({"Action" : "browser database contains History Items", "Success" : True})
 		else:
-			logList.append({"Action" : "Safari database contains History Items", "Success" : False})
+			logList.append({"Action" : "browser database contains History Items", "Success" : False})
 			continueBoolean = False
 
 	if continueBoolean:
 		if len(visitOutputData) > 0:
-			logList.append({"Action" : "Safari database contains Visit Items", "Success" : True})
+			logList.append({"Action" : "browser database contains Visit Items", "Success" : True})
 		else:
-			logList.append({"Action" : "Safari database contains Visit Items", "Success" : False})
+			logList.append({"Action" : "browser database contains Visit Items", "Success" : False})
 			continueBoolean = False
 
 	if continueBoolean:

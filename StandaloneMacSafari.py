@@ -26,5 +26,6 @@ sqlVisitItems = "\
 		history_visits.origin AS visitOrigin \
 	FROM history_visits \
 	ORDER BY history_visits.visit_time DESC;" # replace "transition" with real data if/when it becomes available in Safari
+copyDatabaseInputFile = False
 
-GenerateStandalone.generateStandalone(databaseInputFile, sqlHistoryItems, sqlVisitItems)
+GenerateStandalone.generateStandalone(databaseInputFile, sqlHistoryItems, sqlVisitItems, copyDatabaseInputFile)
