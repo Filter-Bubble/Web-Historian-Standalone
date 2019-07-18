@@ -35,6 +35,6 @@ sqlVisitItems = "\
 	FROM visits \
 	LEFT JOIN visit_source on visits.id = visit_source.id \
 	ORDER BY visits.visit_time DESC;"
-copyDatabaseInputFile = False
+copyDatabaseInputFile = True
 
 GenerateStandalone.generateStandalone(databaseInputFile, sqlHistoryItems, sqlVisitItems, copyDatabaseInputFile)
