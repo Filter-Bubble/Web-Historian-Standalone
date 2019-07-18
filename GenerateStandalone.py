@@ -9,6 +9,8 @@ historyItemsOutputFile = os.path.join(temporaryDirectory, "HistoryItems.js")
 visitItemsOutputFile = os.path.join(temporaryDirectory, "VisitItems.js")
 manifestInputFile = os.path.join(temporaryDirectory, "manifest.json")
 manifestOutputFile = os.path.join(temporaryDirectory, "Manifest.js")
+categoriesInputFile = os.path.join(temporaryDirectory, "core", "js", "app", "categories.json")
+categoriesOutputFile = os.path.join(temporaryDirectory, "Categories.js")
 def messagesInputFile(temporaryDirectory, defaultLocale):
 	return os.path.join(temporaryDirectory, "_locales", defaultLocale, "messages.json")
 messagesOutputFile = os.path.join(temporaryDirectory, "Messages.js")
@@ -22,6 +24,7 @@ else:
 injectedHtml = "\
 	<script type=\"application/javascript\" src=\"Manifest.js\"></script> \
 	<script type=\"application/javascript\" src=\"Messages.js\"></script> \
+	<script type=\"application/javascript\" src=\"Categories.js\"></script> \
 	<script type=\"application/javascript\" src=\"HistoryItems.js\"></script> \
 	<script type=\"application/javascript\" src=\"VisitItems.js\"></script> \
 	<script type=\"application/javascript\" src=\"WebExtensionShim.js\"></script>"
@@ -114,6 +117,18 @@ def generateStandalone(databaseInputFile, sqlHistoryItems, sqlVisitItems):
 			logList.append({"Action" : "Wrote default locale messages data", "Success" : True})
 		except Exception as exception:
 			logList.append({"Action" : "Wrote default locale messages data", "Success" : False, "Error" : str(exception)})
+			continueBoolean = False
+
+	if continueBoolean:
+		try:
+			with open(categoriesInputFile, "r") as file:
+				categoriesJson = json.load(file)
+			categoriesJs = "var categoriesJson = " + json.dumps(categoriesJson)
+			with open(categoriesOutputFile, "w") as file:
+				file.write(categoriesJs)
+			logList.append({"Action" : "Wrote categories data", "Success" : True})
+		except Exception as exception:
+			logList.append({"Action" : "Wrote categories data", "Success" : False, "Error" : str(exception)})
 			continueBoolean = False
 
 	if continueBoolean:
