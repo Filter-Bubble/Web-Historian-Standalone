@@ -24,10 +24,11 @@ else:
 injectedHtml = "\
 	<script type=\"application/javascript\" src=\"Manifest.js\"></script> \
 	<script type=\"application/javascript\" src=\"Messages.js\"></script> \
-	<script type=\"application/javascript\" src=\"Categories.js\"></script> \
 	<script type=\"application/javascript\" src=\"HistoryItems.js\"></script> \
 	<script type=\"application/javascript\" src=\"VisitItems.js\"></script> \
-	<script type=\"application/javascript\" src=\"WebExtensionShim.js\"></script>"
+	<script type=\"application/javascript\" src=\"WebExtensionShim.js\"></script> \
+	<script type=\"application/javascript\" src=\"Categories.js\"></script> \
+	<script type=\"application/javascript\" src=\"LoadJson.js\"></script>"
 
 def generateStandalone(databaseInputFile, sqlHistoryItems, sqlVisitItems, copyDatabaseInputFile):
 
@@ -134,7 +135,7 @@ def generateStandalone(databaseInputFile, sqlHistoryItems, sqlVisitItems, copyDa
 	if continueBoolean:
 		try:
 			if copyDatabaseInputFile: # to avoid the DB being locked.
-				databaseInputFileCopy = databaseInputFile + ".copy.db"
+				databaseInputFileCopy = os.path.join(temporaryDirectory, "History.db")
 				shutil.copyfile(databaseInputFile, databaseInputFileCopy)
 				connection = sqlite3.connect(databaseInputFileCopy)
 			else:
@@ -162,26 +163,7 @@ def generateStandalone(databaseInputFile, sqlHistoryItems, sqlVisitItems, copyDa
 			logList.append({"Action" : "Extract History and Visit Items from browser database", "Success" : True})
 		except Exception as exception:
 			logList.append({"Action" : "Extract History and Visit Items from browser database", "Success" : False, "Error" : str(exception)})
-			try:
-				webbrowser.open_new_tab("file:" + fullDiskAccessPage)
-				logList.append({"Action" : "Open Full Disk Access page in new tab in browser", "Success" : True})
-			except Exception as exception:
-				logList.append({"Action" : "Open Full Disk Access page in new tab in browser", "Success" : False, "Error" : str(exception)})
 			connection.close()
-			continueBoolean = False
-
-	if continueBoolean:
-		if len(historyOutputData) > 0:
-			logList.append({"Action" : "browser database contains History Items", "Success" : True})
-		else:
-			logList.append({"Action" : "browser database contains History Items", "Success" : False})
-			continueBoolean = False
-
-	if continueBoolean:
-		if len(visitOutputData) > 0:
-			logList.append({"Action" : "browser database contains Visit Items", "Success" : True})
-		else:
-			logList.append({"Action" : "browser database contains Visit Items", "Success" : False})
 			continueBoolean = False
 
 	if continueBoolean:

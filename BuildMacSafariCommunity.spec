@@ -5,7 +5,7 @@ a = Analysis(
 		('Web-Extension-Shim/WebExtensionShim.js', 'Web-Historian/'),
 		('FullDiskAccess.html', 'Web-Historian/'),
 		('FullDiskAccess.gif', 'Web-Historian/'),
-		('database.js', 'Web-Historian/core/js/app/')
+		('LoadJson.js', 'Web-Historian/')
 	]
 )
 pyz = PYZ(
