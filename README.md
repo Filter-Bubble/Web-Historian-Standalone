@@ -17,13 +17,12 @@ Part of this project makes use of the [Web Historian](http://www.webhistorian.or
 
 ### Build the app
 
-- Run `pyinstaller GenerateStandalone.py --onefile --windowed --name="WebHistorian" --icon="icon-128.icns" --add-data="Web-Historian-xx/:Web-Historian/" --add-data="Web-Extension-Shim/WebExtensionShim.js:Web-Historian/" --add-data="FullDiskAccess.html:Web-Historian/" --add-data="FullDiskAccess.gif:Web-Historian/"`.
-- Substitute `Web-Historian-Community`, `Web-Historian-Education` or `Web-Historian-Habits` for `Web-Historian-xx`.
-- Run `Disk Utility` and choose `File` > `New Image` > `Image from Folder` (see [here](https://support.apple.com/en-gb/guide/disk-utility/dskutl11888/mac)). Then select the directory with the Web Historian app. This will generate a _.dmg_ file which allows the app to be distributed more easily.
+- Configure your edition of Web Historian in the submodule directory. The only supported one is the Community edition. Standalone versions of Web Historian Habits or Web Historian Education are possible in principle, but currently not implemented.
+- Run `pyinstaller Build[OS][Browser][WebHistorianEdition].spec` where [OS] currently is either Windows or Mac, [Browser] is only Chrome for Windows and either Chrome or Safari for Mac and, finally, the choice for [WebHistorianEdition] is only Community.
+- When building on Mac, also run `Disk Utility` and choose `File` > `New Image` > `Image from Folder` (see [here](https://support.apple.com/en-gb/guide/disk-utility/dskutl11888/mac)). Then select the directory with the Web Historian app. This will generate a _.dmg_ file which allows the app to be distributed more easily.
 
 ### Additional commands
 
-- Run `pyinstaller WebHistorian.spec` to build the app using the options specified in the _spec_ file.
 - Run `git submodule foreach git pull origin master` to pull the latest commit for each submodule.
 
 ## Repository content
@@ -44,6 +43,10 @@ This directory contains the [Web Historian - Education Edition](https://github.c
 
 This directory contains the [Web Historian - Habits Edition](https://github.com/WebHistorian/habits/) submodule which contains all the source code of the Web Historian browser extension.
 
+### Build[OS][Browser][WebHistorianEdition].spec
+
+This file contains the instructions for `pyinstaller` to build the application.
+
 ### FullDiskAccess.gif
 
 This GIF shows how to add the app to the _Full Disk Access_ list and grant it permission to access browser history data.
@@ -54,8 +57,16 @@ This webpage explains how to add the app to the _Full Disk Access_ list and gran
 
 ### GenerateStandalone.py
 
-This script copies the relevant files to a temporary location on the user's computer. It also extracts the browsing history from their _Safari_ browser and converts this to _JSON_ files. If the script cannot get access to the browsing history, the _FullDiskAccess.html_ page is launched in the user's default browser. If everything goes well, the default browser is launched with a standalone version of _Web Historian_ including the Safari browsing history.
+This script copies the relevant files to a temporary location on the user's computer. It also extracts the browsing history from their browser and converts this to _JSON_ files. For Safari, if the script cannot get access to the browsing history, the _FullDiskAccess.html_ page is launched in the user's default browser. If everything goes well, the default browser is launched with a standalone version of _Web Historian_ including the browsing history.
 
-### icon-128.icns
+### icon-128.[icns/ico]
 
-This icon contains the logo of the Web Historian browser extension which is used for the app.
+This icon (.icns for Mac, .ico for Windows) contains the logo of the Web Historian browser extension which is used for the app.
+
+### LoadJson.js
+
+When running a web page with _JavaScript_ locally, many browsers disable the ability to load _JSON_ data files. The _jQuery_ `get` function, used in Web Historian, would give an error. This file overrides the `get` function and bypasses the loading of _JSON_ files by defining the data as variables and passing these on.
+
+### Standalone[OS][Browser].py
+
+These Python scripts contain the configurations to create standalone versions of Web Historian for various OS's and various browsers. It imports the _GenerateStandalone.py_ script and subsequently runs the `generateStandalone` function.
