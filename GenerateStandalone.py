@@ -14,6 +14,7 @@ categoriesOutputFile = os.path.join(temporaryDirectory, "Categories.js")
 def messagesInputFile(temporaryDirectory, defaultLocale):
 	return os.path.join(temporaryDirectory, "_locales", defaultLocale, "messages.json")
 messagesOutputFile = os.path.join(temporaryDirectory, "Messages.js")
+databaseInputFileCopy = os.path.join(temporaryDirectory, "History.db")
 logOutputFile = os.path.join(temporaryDirectory, "Log.json")
 logList = []
 resourceSubDirectory = "Web-Historian"
@@ -134,17 +135,22 @@ def generateStandalone(databaseInputFile, sqlHistoryItems, sqlVisitItems, copyDa
 
 	if continueBoolean:
 		try:
-			if copyDatabaseInputFile: # to avoid the DB being locked.
-				databaseInputFileCopy = os.path.join(temporaryDirectory, "History.db")
+			if copyDatabaseInputFile: # to avoid the DB being locked. Applicable to Chrome.
 				shutil.copyfile(databaseInputFile, databaseInputFileCopy)
-				connection = sqlite3.connect(databaseInputFileCopy)
-			else:
-				connection = sqlite3.connect(databaseInputFile)
+				databaseInputFile = databaseInputFileCopy
+			logList.append({"Action" : "Copy browser database to unlock it if necessary", "Success" : True})
+		except Exception as exception:
+			logList.append({"Action" : "Copy browser database to unlock it if necessary", "Success" : False, "Error" : str(exception)})
+			continueBoolean = False
+
+	if continueBoolean:
+		try:
+			connection = sqlite3.connect(databaseInputFile)
 			cursor = connection.cursor()
 			logList.append({"Action" : "Open connection to database", "Success" : True})
 		except Exception as exception:
 			logList.append({"Action" : "Open connection to browser database", "Success" : False, "Error" : str(exception)})
-			try:
+			try: # Open instructions to user how to give access to their browser database. Applicable to Safari.
 				webbrowser.open_new_tab("file:" + fullDiskAccessPage)
 				logList.append({"Action" : "Open Full Disk Access page in new tab in browser", "Success" : True})
 			except Exception as exception:
